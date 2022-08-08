@@ -28,13 +28,6 @@ type PlacedOrders struct {
 	CreatedAt  time.Time
 }
 
-type Basket struct {
-	id       int
-	Name     string `json:"ProductName"`
-	Quantity int    `json:"Quantity"`
-}
-
-type TotalPrice struct {
-	TotalPrice int `json:"TotalPrice"`
-	TotalVAT   int `json:"TotalVAT"`
+type GivenAmounts struct {
+	GivenAmount int
 }

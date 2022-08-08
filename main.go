@@ -11,12 +11,14 @@ import (
 )
 
 func setUpRoutes(app *fiber.App) {
-	app.Get("/hello", routes.Hello)
 	app.Get("/products", routes.GetAllProducts)
-	app.Get("/cart/:id", routes.ShowCart)
-	app.Delete("/delete/:id", routes.Delete)
+	app.Get("/cart/:user_id", routes.ShowCart)
+	app.Get("/givenAmount", routes.GetGivenAmount)
+	app.Delete("/delete/:user_id/:product_id", routes.DeleteItemFromCart)
 	app.Post("/:product_id/:user_id/:quantity", routes.AddItemToCart)
 	app.Post("/order/:id", routes.CompleteOrder)
+	app.Post("/amount/:amount", routes.SetGivenAmount)
+
 }
 
 func main() {
