@@ -105,7 +105,7 @@ func ShowCart(c *fiber.Ctx) error {
 }
 
 func CompleteOrder(c *fiber.Ctx) error {
-	userId, _ := strconv.Atoi(c.Params("id"))
+	userId, _ := strconv.Atoi(c.Params("user_id"))
 
 	CompletedOrders := models.PlacedOrders{UserID: userId, TotalPrice: TotalAmount, CreatedAt: time.Now()}
 

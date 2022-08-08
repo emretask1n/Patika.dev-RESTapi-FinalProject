@@ -14,15 +14,15 @@
 
 ### Endpoints
 
-| Method |                     URL                      |              Function |
-|--------|:--------------------------------------------:|----------------------:|
-| GET    |                  /products                   |         Show Products |
-| GET    |                /cart/:user_id                |             Show cart |
-| GET    |                 /givenAmount                 |     Show Given Amount |
-| DELETE |         /delete/:user_id/:product_id         | Delete item from cart |
-| POST   |       /:product_id/:user_id/:quantity        |      Add item to cart |
-| POST   |                  /order/:id                  |         CompleteOrder |
-| POST   |           /amount/:amount                    |  Set new given amount |
+| Method |               URL               |                                              Function |
+|--------|:-------------------------------:|------------------------------------------------------:|
+| GET    |            /products            |                                         Show Products |
+| GET    |         /cart/:user_id          |                                     Show cart of user |
+| GET    |          /givenAmount           |                                     Show Given Amount |
+| DELETE |  /delete/:user_id/:product_id   |     Delete item from cart with user id and product id |
+| POST   | /:product_id/:user_id/:quantity | Add item to cart with product id user id and quantity |
+| POST   |         /order/:user_id         |                           Complete order with user id |
+| POST   |         /amount/:amount         |                              Set a new "Given Amount" |
 
 
 
@@ -32,19 +32,19 @@ The database schema I use for the project is in the database file. In order for 
 
 To connect to the database you need to configure the code;
 
-```go
+```
 dsn := "root:1234@tcp(127.0.0.1:3306)/restapi?charset=utf8mb4&parseTime=True&loc=Local"
 ```
 
 A DSN in its fullest form:
 
-```go
+```
 username:password@protocol(address)/dbname?param=value
 ```
 
 If you have problems with data insertion, you can use the codes I added comments in the **DataInsertion.sql** file.
 
-```sql
+```
 SET SQL_SAFE_UPDATES = 0;
 
 SET FOREIGN_KEY_CHECKS = 0;
