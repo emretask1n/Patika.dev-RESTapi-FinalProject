@@ -1,22 +1,25 @@
-## Database
+# Database
 
-The database schema I use for the project is here. In order for you to try the API, the sql codes that insert data into the Product and User tables are also in this path.
+![Database Schema](DbSchema.png)
+
+
+The database schema I use for the project is here. In order for you to try the API, the sql codes that insert data into the Product and User tables are also in "DbSchema.sql".
 
 To connect to the database you need to configure the code;
 
-```
+```go
 dsn := "root:1234@tcp(127.0.0.1:3306)/restapi?charset=utf8mb4&parseTime=True&loc=Local"
 ```
 
 A DSN in its fullest form:
 
-```
+```go
 username:password@protocol(address)/dbname?param=value
 ```
 
 If you have problems with data insertion, you can use the codes I added comments in the **DataInsertion.sql** file.
 
-```s
+```sql
 SET SQL_SAFE_UPDATES = 0;
 
 SET FOREIGN_KEY_CHECKS = 0;
