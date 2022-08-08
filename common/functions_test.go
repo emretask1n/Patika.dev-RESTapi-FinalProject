@@ -27,7 +27,7 @@ var sumTests = []sumTest{
 
 func TestSum(t *testing.T) {
 	for _, test := range sumTests {
-		if output := Sum(test.slice); output != test.expected {
+		if output := SumOfIntSlice(test.slice); output != test.expected {
 			t.Errorf("Output not equal to expected")
 		}
 	}
