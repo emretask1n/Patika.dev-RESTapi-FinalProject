@@ -1,22 +1,24 @@
 package main
 
 import (
+	GivenAmountRouter "REST_API/GivenAmount/router"
+	ProductRouter "REST_API/Product/router"
+	ShoppingCartRouter "REST_API/ShoppingCart/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
 
 	"REST_API/database"
-	"REST_API/routes"
 )
 
 func setUpRoutes(app *fiber.App) {
-	app.Get("/products", routes.GetAllProducts)
-	app.Get("/cart/:user_id", routes.ShowCart)
-	app.Get("/givenAmount", routes.GetGivenAmount)
-	app.Delete("/delete/:user_id/:product_id", routes.DeleteItemFromCart)
-	app.Post("/:product_id/:user_id/:quantity", routes.AddItemToCart)
-	app.Post("/order/:user_id", routes.CompleteOrder)
-	app.Post("/amount/:amount", routes.SetGivenAmount)
+	app.Get("/products", ProductRouter.GetAllProducts)
+	app.Get("/cart/:user_id", ShoppingCartRouter.ShowCart)
+	app.Get("/givenAmount", GivenAmountRouter.GetGivenAmount)
+	app.Delete("/delete/:user_id/:product_id", ShoppingCartRouter.DeleteItemFromCart)
+	app.Post("/:product_id/:user_id/:quantity", ShoppingCartRouter.AddItemToCart)
+	app.Post("/order/:user_id", ShoppingCartRouter.CompleteOrder)
+	app.Post("/amount/:amount", GivenAmountRouter.SetGivenAmount)
 
 }
 
