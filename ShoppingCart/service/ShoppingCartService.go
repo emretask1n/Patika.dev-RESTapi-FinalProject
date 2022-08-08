@@ -2,21 +2,20 @@ package ShoppingCartService
 
 import (
 	GivenAmountRepository "REST_API/GivenAmount/repository"
+	PlacedOrderModel "REST_API/PlacedOrders/model"
 	PlacedOrderRepository "REST_API/PlacedOrders/repository"
 	ProductRepository "REST_API/Product/repository"
 	ShoppingCartModel "REST_API/ShoppingCart/model"
 	ShoppingCartRepository "REST_API/ShoppingCart/repository"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
+	"time"
 )
 
-//TotalAmount is to Calculate sum of prices
 var TotalAmount int
 
-//result is to show the names of products, quantities and total prices and vats of Cart
 var result []string
 
-//SumOfIntSlice function is to get the sum of int slices.
 func SumOfIntSlice(array []int) int {
 	result := 0
 	for _, v := range array {
@@ -86,7 +85,7 @@ func ShowAllCart(c *fiber.Ctx) error {
 	Discount = DiscountCalculator(discountCalculatorDTO)
 
 	for i := 0; i < len(productIds); i++ {
-		VatTypes := ShoppingCartRepository.GetVATTypes()
+		VatTypes := ProductRepository.GetVATTypes()
 		quantity := ShoppingCartRepository.GetQuantityByProductId(productIds[i])
 		price := ProductRepository.GetPriceByProductId(productIds[i])
 		vat := ProductRepository.GetVATByProductId(productIds[i])
@@ -115,4 +114,36 @@ func ShowAllCart(c *fiber.Ctx) error {
 	} else {
 		return c.SendString("Cart is Empty")
 	}
+}
+
+func CompleteOrderByUserId(c *fiber.Ctx) error {
+	userId, _ := strconv.Atoi(c.Params("user_id"))
+
+	CompletedOrders := PlacedOrderModel.PlacedOrders{UserID: userId, TotalPrice: TotalAmount, CreatedAt: time.Now()}
+
+	ShoppingCartRepository.CompleteOrders(CompletedOrders)
+
+	ShoppingCartRepository.DeleteCartById(userId)
+	return c.SendString("Order Completed!")
+}
+
+func DeleteItemFromCartByProductIdAndUserId(c *fiber.Ctx) error {
+	IdToBeDeleted, _ := strconv.Atoi(c.Params("product_id"))
+	userId, _ := strconv.Atoi(c.Params("user_id"))
+
+	ShoppingCartRepository.DeleteProductFromCartByUProductIdAndUserId(IdToBeDeleted, userId)
+
+	return c.Status(200).JSON("deleted")
+}
+
+func AddItemToCartByProductIdUserIdAndQuantity(c *fiber.Ctx) error {
+	productId, _ := strconv.Atoi(c.Params("product_id"))
+	userId, _ := strconv.Atoi(c.Params("user_id"))
+	quantity, _ := strconv.Atoi(c.Params("quantity"))
+
+	shoppingCart := ShoppingCartModel.ShoppingCart{ProductID: productId, UserID: userId, Quantity: quantity}
+
+	ShoppingCartRepository.InsertIntoCart(shoppingCart)
+
+	return c.Status(200).JSON(shoppingCart)
 }

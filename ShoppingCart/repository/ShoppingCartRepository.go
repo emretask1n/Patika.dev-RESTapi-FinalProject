@@ -34,9 +34,3 @@ func DeleteCartById(userId int) *gorm.DB {
 func DeleteProductFromCartByUProductIdAndUserId(IdToBeDeleted int, userId int) *gorm.DB {
 	return database.Instance.Exec("delete from shopping_carts where product_id = ? and user_id = ?", IdToBeDeleted, userId)
 }
-
-func GetVATTypes() []int {
-	var VATTypes []int
-	database.Instance.Raw("Select distinct vat from products").Scan(&VATTypes)
-	return VATTypes
-}
