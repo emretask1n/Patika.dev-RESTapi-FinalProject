@@ -3,8 +3,7 @@ package GivenAmountRepository
 import (
 	GivenAmountModel "REST_API/GivenAmount/model"
 	"REST_API/database"
-	"github.com/gofiber/fiber/v2"
-	"strconv"
+	"gorm.io/gorm"
 )
 
 func GetGivenAmount() int {
@@ -13,13 +12,19 @@ func GetGivenAmount() int {
 	return GivenAmount
 }
 
-func SetNewGivenAmountAndDeleteOldOne(c *fiber.Ctx) {
-	database.Instance.Exec("DELETE from given_amounts")
+func DeleteOldGivenAmount() *gorm.DB {
+	return database.Instance.Exec("DELETE from given_amounts")
+}
 
-	newAmount, _ := strconv.Atoi(c.Params("amount"))
+func GetGivenAmountAsTable() []GivenAmountModel.GivenAmounts {
+	var givenAmount []GivenAmountModel.GivenAmounts
+	database.Instance.Find(&givenAmount)
+	return givenAmount
+}
+
+func SetNewGivenAmount(newAmount int) {
 	var givenAmount = GivenAmountModel.GivenAmounts{
 		GivenAmount: newAmount,
 	}
-
 	database.Instance.Select("given_amount").Create(&givenAmount)
 }
