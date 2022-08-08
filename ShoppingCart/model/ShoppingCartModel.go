@@ -1,4 +1,4 @@
-package model
+package ShoppingCartModel
 
 type ShoppingCart struct {
 	ProductID int `json:"ProductID"`

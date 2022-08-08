@@ -2,9 +2,9 @@ package GivenAmountRouter
 
 import (
 	GivenAmountModel "REST_API/GivenAmount/model"
+	GivenAmountRepository "REST_API/GivenAmount/repository"
 	"REST_API/database"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
 )
 
 //GetGivenAmount shows "GivenAmount" for user
@@ -16,13 +16,6 @@ func GetGivenAmount(c *fiber.Ctx) error {
 
 //SetGivenAmount changes GivenAmount with a new one
 func SetGivenAmount(c *fiber.Ctx) error {
-	database.Instance.Exec("DELETE from given_amounts")
-
-	newAmount, _ := strconv.Atoi(c.Params("amount"))
-	var givenAmount = GivenAmountModel.GivenAmounts{
-		GivenAmount: newAmount,
-	}
-
-	database.Instance.Select("given_amount").Create(&givenAmount)
+	GivenAmountRepository.SetNewGivenAmountAndDeleteOldOne(c)
 	return c.SendString("New Given Amount is " + c.Params("amount"))
 }

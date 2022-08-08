@@ -2,7 +2,7 @@ package ShoppingCartRouter
 
 import (
 	PlacedOrderModel "REST_API/PlacedOrders/model"
-	"REST_API/ShoppingCart/model"
+	ShoppingCartModel "REST_API/ShoppingCart/model"
 	ShoppingCartRepository "REST_API/ShoppingCart/repository"
 	ShoppingCartService "REST_API/ShoppingCart/service"
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +23,7 @@ func AddItemToCart(c *fiber.Ctx) error {
 	userId, _ := strconv.Atoi(c.Params("user_id"))
 	quantity, _ := strconv.Atoi(c.Params("quantity"))
 
-	shoppingCart := model.ShoppingCart{ProductID: productId, UserID: userId, Quantity: quantity}
+	shoppingCart := ShoppingCartModel.ShoppingCart{ProductID: productId, UserID: userId, Quantity: quantity}
 
 	ShoppingCartRepository.InsertIntoCart(shoppingCart)
 

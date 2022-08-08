@@ -2,7 +2,7 @@ package ShoppingCartRepository
 
 import (
 	PlacedOrderModel "REST_API/PlacedOrders/model"
-	"REST_API/ShoppingCart/model"
+	ShoppingCartModel "REST_API/ShoppingCart/model"
 	"REST_API/database"
 	"gorm.io/gorm"
 )
@@ -19,7 +19,7 @@ func GetQuantityByProductId(productId int) int {
 	return quantity
 }
 
-func InsertIntoCart(shoppingCart model.ShoppingCart) *gorm.DB {
+func InsertIntoCart(shoppingCart ShoppingCartModel.ShoppingCart) *gorm.DB {
 	return database.Instance.Select("ProductID", "UserID", "Quantity").Create(&shoppingCart)
 }
 
@@ -33,4 +33,10 @@ func DeleteCartById(userId int) *gorm.DB {
 
 func DeleteProductFromCartByUProductIdAndUserId(IdToBeDeleted int, userId int) *gorm.DB {
 	return database.Instance.Exec("delete from shopping_carts where product_id = ? and user_id = ?", IdToBeDeleted, userId)
+}
+
+func GetVATTypes() []int {
+	var VATTypes []int
+	database.Instance.Raw("Select distinct vat from products").Scan(&VATTypes)
+	return VATTypes
 }

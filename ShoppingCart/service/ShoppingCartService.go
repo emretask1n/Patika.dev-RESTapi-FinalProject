@@ -3,8 +3,8 @@ package ShoppingCartService
 import (
 	GivenAmountRepository "REST_API/GivenAmount/repository"
 	PlacedOrderRepository "REST_API/PlacedOrders/repository"
-	ProductModel "REST_API/Product/model"
 	ProductRepository "REST_API/Product/repository"
+	ShoppingCartModel "REST_API/ShoppingCart/model"
 	ShoppingCartRepository "REST_API/ShoppingCart/repository"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
@@ -26,22 +26,22 @@ func SumOfIntSlice(array []int) int {
 }
 
 //DiscountCalculator calculates discounts based on VAT values, Business Rules A and C are handled here
-func DiscountCalculator(Discount map[int]int, MonthlySpending int, VATTypes int, OrderCountForDiscount int, GivenAmount int) map[int]int {
+func DiscountCalculator(dto ShoppingCartModel.DiscountCalculatorDTO) map[int]int {
 	Vats := []int{1, 8, 18}
-	if MonthlySpending > GivenAmount {
-		for l := 0; l < VATTypes; l++ {
-			Discount[Vats[l]] = 10
+	if dto.MonthlySpending > dto.GivenAmount {
+		for l := 0; l < len(Vats); l++ {
+			dto.Discount[Vats[l]] = 10
 		}
 	} else {
 	}
-	if OrderCountForDiscount%4 == 3 {
-		Discount[8] = 10
-		Discount[18] = 15
+	if dto.OrderCountForDiscount%4 == 3 {
+		dto.Discount[8] = 10
+		dto.Discount[18] = 15
 	}
-	return Discount
+	return dto.Discount
 }
 
-func PriceCalculationForProduct(dto ProductModel.PriceCalculationDTO) (prices, vats []int) {
+func PriceCalculationForProduct(dto ShoppingCartModel.PriceCalculationDTO) (prices, vats []int) {
 	if dto.Quantity > 3 && dto.Discount < 10 {
 		withoutDiscount := dto.Price * 3
 		withDiscount := dto.Price * (dto.Quantity - 3) / 100 * 92
@@ -68,7 +68,6 @@ func ShowAllCart(c *fiber.Ctx) error {
 		18: 0,
 	}
 
-	VATTypes := ProductRepository.GetVATTypes()
 	MonthlySpending := PlacedOrderRepository.GetMonthlySpendingByUserId(userId)
 	GivenAmount := GivenAmountRepository.GetGivenAmount()
 	OrderCountForDiscount := PlacedOrderRepository.GetOrderCountAndSpendingForDiscount(userId, GivenAmount)
@@ -77,10 +76,17 @@ func ShowAllCart(c *fiber.Ctx) error {
 	var prices []int
 	var vats []int
 
-	Discount = DiscountCalculator(Discount, MonthlySpending, VATTypes, OrderCountForDiscount, GivenAmount)
+	discountCalculatorDTO := ShoppingCartModel.DiscountCalculatorDTO{
+		Discount:              Discount,
+		MonthlySpending:       MonthlySpending,
+		OrderCountForDiscount: OrderCountForDiscount,
+		GivenAmount:           GivenAmount,
+	}
+
+	Discount = DiscountCalculator(discountCalculatorDTO)
 
 	for i := 0; i < len(productIds); i++ {
-
+		VatTypes := ShoppingCartRepository.GetVATTypes()
 		quantity := ShoppingCartRepository.GetQuantityByProductId(productIds[i])
 		price := ProductRepository.GetPriceByProductId(productIds[i])
 		vat := ProductRepository.GetVATByProductId(productIds[i])
@@ -88,9 +94,9 @@ func ShowAllCart(c *fiber.Ctx) error {
 
 		result = append(result, "Product Name: "+name+" Quantity: "+strconv.Itoa(quantity))
 
-		priceCalculationDTO := ProductModel.PriceCalculationDTO{
+		priceCalculationDTO := ShoppingCartModel.PriceCalculationDTO{
 			Quantity: quantity,
-			Discount: Discount[i],
+			Discount: Discount[VatTypes[i]],
 			Price:    price,
 			Vat:      vat,
 			Prices:   prices,
@@ -98,13 +104,10 @@ func ShowAllCart(c *fiber.Ctx) error {
 		}
 		prices, vats = PriceCalculationForProduct(priceCalculationDTO)
 	}
+
 	TotalAmount = SumOfIntSlice(prices)
 	totalVATS := SumOfIntSlice(vats)
 
-	return CheckCartStatus(c, totalVATS)
-}
-
-func CheckCartStatus(c *fiber.Ctx, totalVATS int) error {
 	if len(result) != 0 {
 		result = append(result, "Total Price: "+strconv.Itoa(TotalAmount))
 		result = append(result, "Total VAT: "+strconv.Itoa(totalVATS))
@@ -112,5 +115,4 @@ func CheckCartStatus(c *fiber.Ctx, totalVATS int) error {
 	} else {
 		return c.SendString("Cart is Empty")
 	}
-
 }

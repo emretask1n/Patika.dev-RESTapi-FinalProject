@@ -1,6 +1,9 @@
 package ProductRepository
 
-import "REST_API/database"
+import (
+	ProductModel "REST_API/Product/model"
+	"REST_API/database"
+)
 
 func GetPriceByProductId(productId int) int {
 	var price int
@@ -24,4 +27,10 @@ func GetVATTypes() int {
 	var vatTypes int
 	database.Instance.Raw("SELECT COUNT( DISTINCT vat ) FROM products").Scan(&vatTypes)
 	return vatTypes
+}
+
+func GetProductTable() []ProductModel.Product {
+	var products []ProductModel.Product
+	database.Instance.Find(&products)
+	return products
 }
