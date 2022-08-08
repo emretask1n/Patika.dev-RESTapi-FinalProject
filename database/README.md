@@ -1,4 +1,4 @@
-### Database
+## Database
 
 The database schema I use for the project is here. In order for you to try the API, the sql codes that insert data into the Product and User tables are also in this path.
 
