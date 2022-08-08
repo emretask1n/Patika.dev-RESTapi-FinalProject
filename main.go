@@ -2,12 +2,11 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
 
 	"REST_API/database"
 	"REST_API/routes"
-
-	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func setUpRoutes(app *fiber.App) {
