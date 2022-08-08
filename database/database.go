@@ -23,6 +23,7 @@ func ConnectDb() {
 	}
 
 	log.Println("connected")
+	// Migration is for to create tables from models to an existing Database Schema, I did not use them. I created Manually.
 	// db.AutoMigrate(&models.Product{})
 	// db.AutoMigrate(&models.ShoppingCart{})
 	Instance = db
