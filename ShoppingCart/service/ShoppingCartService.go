@@ -40,6 +40,7 @@ func DiscountCalculator(dto ShoppingCartModel.DiscountCalculatorDTO) map[int]int
 	return dto.Discount
 }
 
+//PriceCalculationForProduct handles Business Rules B and D of Project
 func PriceCalculationForProduct(dto ShoppingCartModel.PriceCalculationDTO) (prices, vats []int) {
 	if dto.Quantity > 3 && dto.Discount < 10 {
 		withoutDiscount := dto.Price * 3
