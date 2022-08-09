@@ -89,14 +89,14 @@ func TestPriceCalculationForProduct(t *testing.T) {
 	for _, test := range priceCalculationForProductTests {
 		prices, vats := test.expected1, test.expected2
 		resultPrices, resultVats := PriceCalculationForProduct(test.dto)
-		if Equal(vats, resultVats) && Equal(prices, resultPrices) {
+		if SliceEqualityCheck(vats, resultVats) && SliceEqualityCheck(prices, resultPrices) {
 		} else {
 			t.Errorf("Output not equal to expected")
 		}
 	}
 }
 
-func Equal(a, b []int) bool {
+func SliceEqualityCheck(a, b []int) bool {
 	if len(a) != len(b) {
 		return false
 	}

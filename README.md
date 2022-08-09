@@ -2,6 +2,8 @@
 
 ## REST API service in Golang
 
+A REST API for shopping cart system that allows users to  List Products, Add Item To Cart, Show Cart Delete Cart items, and Complete Orders.
+
 ### Frameworks Used For the Project
 
 - GORM
