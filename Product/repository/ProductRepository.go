@@ -23,12 +23,6 @@ func GetProductNameByProductId(productId int) string {
 	return name
 }
 
-func GetVATTypes() []int {
-	var vatTypes []int
-	database.Instance.Raw("SELECT DISTINCT vat FROM products").Scan(&vatTypes)
-	return vatTypes
-}
-
 func GetProductTable() []ProductModel.Product {
 	var products []ProductModel.Product
 	database.Instance.Find(&products)

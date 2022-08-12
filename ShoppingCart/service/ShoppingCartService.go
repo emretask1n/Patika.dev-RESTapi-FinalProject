@@ -31,7 +31,6 @@ func DiscountCalculator(dto ShoppingCartModel.DiscountCalculatorDTO) map[int]int
 		for l := 0; l < len(Vats); l++ {
 			dto.Discount[Vats[l]] = 10
 		}
-	} else {
 	}
 	if dto.OrderCountForDiscount%4 == 3 {
 		dto.Discount[8] = 10
@@ -86,7 +85,7 @@ func ShowAllCart(c *fiber.Ctx) error {
 	Discount = DiscountCalculator(discountCalculatorDTO)
 
 	for i := 0; i < len(productIds); i++ {
-		VatTypes := ProductRepository.GetVATTypes()
+		//VatTypes := ProductRepository.GetVATTypes()
 		quantity := ShoppingCartRepository.GetQuantityByProductId(productIds[i])
 		price := ProductRepository.GetPriceByProductId(productIds[i])
 		vat := ProductRepository.GetVATByProductId(productIds[i])
@@ -96,7 +95,7 @@ func ShowAllCart(c *fiber.Ctx) error {
 
 		priceCalculationDTO := ShoppingCartModel.PriceCalculationDTO{
 			Quantity: quantity,
-			Discount: Discount[VatTypes[i]],
+			Discount: Discount[vat], //Discount: Discount[VatTypes[i]]
 			Price:    price,
 			Vat:      vat,
 			Prices:   prices,
